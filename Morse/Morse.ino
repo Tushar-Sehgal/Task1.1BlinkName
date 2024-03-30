@@ -21,13 +21,13 @@ void outputMorseCode(const char* morse) {
       digitalWrite(LED_BUILTIN, HIGH); // Turn on LED
       delay(500); // Dot duration
       digitalWrite(LED_BUILTIN, LOW); // Turn off LED
-      delay(1500); // Inter-element gap
+      delay(500); // Inter-element gap
     } else if (morse[i] == '-') {
       // Dash
       digitalWrite(LED_BUILTIN, HIGH); // Turn on LED
       delay(1500); // Dash duration
       digitalWrite(LED_BUILTIN, LOW); // Turn off LED
-      delay(1500); // Inter-element gap
+      delay(500); // Inter-element gap
     }
   }
 }
@@ -52,6 +52,7 @@ void loop() {
       if (name[i] >= 'A' && name[i] <= 'Z') {
         int index = name[i] - 'A';
         outputMorseCode(morseCode[index]);
+        delay(1500);
       } else {
         Serial.println("Character not supported");
       }
