@@ -1,14 +1,19 @@
+// Morse code representations
 const char* morseCode[] = {
   ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",
   "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",
   "..-", "...-", ".--", "-..-", "-.--", "--.."
 };
 
+// Flag indicating whether the system is waiting for user input
+bool isWaitingForInput = true;
+
 void setup() {
   Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
+// Function to output Morse code representation of an alphabet
 void outputMorseCode(const char* morse) {
   for (int i = 0; morse[i] != '\0'; i++) {
     if (morse[i] == '.') {
@@ -27,23 +32,31 @@ void outputMorseCode(const char* morse) {
   }
 }
 
-// the loop function runs over and over again forever
 void loop() {
-  Serial.println("Enter Your First Name:");
-  char name = toupper(Serial.read());
-  // Wait for user input
-  while(!Serial.available());
-
-  // Print the input character
-  Serial.print("You entered: ");
-  Serial.println(name);
-  if (name >= 'A' && name <= 'Z') {
-    // Get the index of the input character in the Morse code array
-    int index = name - 'A';
-    // Output the Morse code for the input character
-    outputMorseCode(morseCode[index]);
-  } else {
-    // Output an error message for unsupported characters
-    Serial.println("Character not supported");
+  // Delay to separate two sequences and for providing time to open serial monitor
+  delay(5000);
+  if (isWaitingForInput){
+    Serial.println("Enter Your First Name:");
+    isWaitingForInput = false;
+  }
+  if (Serial.available() > 0) {
+    // Read user input
+    String name = Serial.readStringUntil('\n');
+    name.toUpperCase();
+    // Print user input
+    Serial.print("You entered: ");
+    Serial.println(name);
+    Serial.println("Displaying your name on Arduino");
+    // Display user input in Morse
+    for (int i = 0; i < name.length(); i++) {
+      if (name[i] >= 'A' && name[i] <= 'Z') {
+        int index = name[i] - 'A';
+        outputMorseCode(morseCode[index]);
+      } else {
+        Serial.println("Character not supported");
+      }
+    }
+    // Set flag to waiting for input again
+    isWaitingForInput = true;
   }
 }
