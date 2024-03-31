@@ -10,6 +10,7 @@ bool isWaitingForInput = true;
 
 void setup() {
   Serial.begin(9600);
+  while(!Serial){}
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
@@ -34,7 +35,6 @@ void outputMorseCode(const char* morse) {
 
 void loop() {
   // Delay to separate two sequences and for providing time to open serial monitor
-  delay(5000);
   if (isWaitingForInput){
     Serial.println("Enter Your First Name:");
     isWaitingForInput = false;
@@ -59,5 +59,6 @@ void loop() {
     }
     // Set flag to waiting for input again
     isWaitingForInput = true;
+    delay(5000);
   }
 }
